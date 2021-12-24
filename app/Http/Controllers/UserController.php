@@ -13,8 +13,14 @@ class UserController extends Controller
         $user = new User;
         $user->name= $req->input('name');
         $user->email= $req->input('email');
-        $user->password= Hash::make($req->input('password'));
+        $user->password= $req->input('password');
         $user->save();
         return $user;
+    }
+    function login(request $req){
+        $user = User::where('email', $req->input('email'))->first();
+        if(!$user || !Hash::check($req->input('password') , $user->password)){
+            return ['status' => false];
+        }return $user;
     }
 }
