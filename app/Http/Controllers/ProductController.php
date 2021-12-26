@@ -30,4 +30,24 @@ class ProductController extends Controller
         $result = Product::where('id',$id)->delete();
         return $result;
     }
+
+    function getProduct($id){
+        return Product::find($id);
+    }
+    
+    function updateProduct($id,request $req){
+        $product = Product::where('id',$id)->first();
+        $product->name = $req->input('name');
+        $product->price = $req->input('price');
+        $product->description = $req->input('description');
+        if($req->file()){
+            $product->file_path = $req->file('file')->store('products');
+        }
+        $product->save();
+        if($product){
+            return ['status'=>true];
+        }else{
+            return ['status'=>false];
+        }
+    }
 }
